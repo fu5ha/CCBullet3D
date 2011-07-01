@@ -64,6 +64,11 @@ class btCollisionShape;
 - (void) setDiscreteDynamicsWorld:(btDiscreteDynamicsWorld *)discreteDynamicsWorld;
 
 /**
+ *steps physics simulation and updates meshes to match normally you won't need to call this.
+ */
+- (void) updateGlobalTransformation;
+
+/**
  * Adds a new CC3PhysicsObject3D containing both a btRigidBody and an CC3Node. Note, this DOES NOT add the
  * node contained in the physics object to the scene: this needs to be done independently. The btRigidBody is
  * added to the btDiscreteDynamicsWorld.
@@ -98,3 +103,4 @@ class btCollisionShape;
 - (CC3PhysicsObject3D *) createPhysicsObject:(CC3Node *)node shape:(btCollisionShape *)shape mass:(float)mass restitution:(float)restitution;
 
 @end
+
