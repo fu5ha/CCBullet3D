@@ -1,6 +1,8 @@
 Bullet Cocos3D Wrapper
 
 STILL IN BETA!!!
+IMPORTANT!!
+You need to edit your build settings and add a NOT recursive header search path "./Bullet\ Wrapper/Wrapping/" WITH the quotes to the "Header Search Paths" and "User Header Search Paths". If you don't, you'll get like over 1000 errors.
 
 create an instance of CC3PhysicsWorld (contains a btDiscreteDynamicsWorld)
 CC3PhysicsWorld *_physicsWorld = [[CC3PhysicsWorld alloc] init];
