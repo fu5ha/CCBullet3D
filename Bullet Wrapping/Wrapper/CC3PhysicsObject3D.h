@@ -80,11 +80,11 @@ class btRigidBody;
 /**
  *Sets the global position, defined as a CC3Vector, of the CC3PhysicsObject
  */
-- (void) setGlobalPosition:(CC3Vector)position;
+//- (void) setGlobalPosition:(CC3Vector)position;
 
 /**
  *sets the rotation, defined as a quaternion (CC3Vector4) of the CC3PhysicsObject
  */
-- (void) setRotationQuaternion:(CC3Vector4)quaternion;
+//- (void) setRotationQuaternion:(CC3Vector4)quaternion;
 
 @end

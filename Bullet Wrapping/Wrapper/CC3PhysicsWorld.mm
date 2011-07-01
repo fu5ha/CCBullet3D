@@ -29,6 +29,7 @@ extern "C" {
 #import "CC3PhysicsWorld.h"
 #import "CC3PhysicsObject3D.h"
 #import "CC3MotionState.h"
+#import "cocos2d.h"
 
 
 @implementation CC3PhysicsWorld
@@ -45,6 +46,7 @@ extern "C" {
 		solver = new btSequentialImpulseConstraintSolver();
 		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 		[self setDiscreteDynamicsWorld:dynamicsWorld];
+        [[CCScheduler sharedScheduler] scheduleSelector:@selector(updateGlobalTransformation) forTarget:self interval:0 paused:NO];
     }
 	
     return self;
@@ -100,7 +102,7 @@ extern "C" {
 	[_physicsObjects removeAllObjects];
 }
 
-- (void) udpateGlobalTransformation:(CC3GLMatrix *)parentTransformation 
+- (void) udpateGlobalTransformation 
 {
 	// Get time since last step
 	NSDate * currentTime = [[NSDate alloc] init];
@@ -149,3 +151,4 @@ extern "C" {
 }
 
 @end
+
