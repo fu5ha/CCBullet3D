@@ -67,12 +67,6 @@ class btRigidBody;
  * @param force The force to be applied.
  * @param position The position at which the force is applied.
  */
-- (void) applyForce:(CC3Vector)force withPosition:(CC3Vector)position;
-
-- (void) applyImpulse:(CC3Vector)impulse withPosition:(CC3Vector)position;
-
-- (CC3Vector) getGlobalPosition;
-
-- (void) setGlobalPosition:(CC3Vector)position;
+- (void) applyForce:(CC3Vector3D *)force withPosition:(CC3Vector3D *)position;
 
 @end

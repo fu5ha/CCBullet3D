@@ -23,13 +23,9 @@
  *
  */
 
-extern "C" {
-#import "CC3Foundation.h"
-};
-
 #import "CC3PhysicsObject3D.h"
 #import "CC3Node.h"
-
+#import "CC3Vector3D.h"
 
 #import "btBulletDynamicsCommon.h"
 
@@ -58,30 +54,11 @@ extern "C" {
 	[super dealloc];
 }
 
-- (void) applyForce:(CC3Vector)force withPosition:(CC3Vector)position {
+- (void) applyForce:(CC3Vector3D *)force withPosition:(CC3Vector3D *)position {
 	btVector3 bodyForce(force.x, force.y, force.z);
 	btVector3 bodyPosition(position.x, position.y, position.z);
 
 	_rigidBody->applyForce(bodyForce, bodyPosition);	
-}
-
-- (void) applyImpulse:(CC3Vector)impulse withPosition:(CC3Vector)position {
-	btVector3 bodyImpulse(impulse.x, impulse.y, impulse.z);
-	btVector3 bodyPosition(position.x, position.y, position.z);
-	
-	_rigidBody->applyImpulse(bodyImpulse, bodyPosition);
-}
-
-- (CC3Vector) getGlobalPosition {
-	btTransform gTrans;
-	_rigidBody->getMotionState()->getWorldTransform(gTrans);
-	CC3Vector position = cc3v(gTrans.getOrigin().getX(), gTrans.getOrigin().getY(), gTrans.getOrigin().getZ());
-	return position;
-}
-
-- (void) setGlobalPosition:(CC3Vector)position  {
-	btTransform gTrans = btTransform(btQuaternion(0,0,0,1),btVector3(position.x, position.y, position.z));
-	_rigidBody->getMotionState()->setWorldTransform(gTrans);
 }
 
 @end

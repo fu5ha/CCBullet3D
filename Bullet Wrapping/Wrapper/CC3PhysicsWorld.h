@@ -91,6 +91,4 @@ class btCollisionShape;
  */
 - (CC3PhysicsObject3D *) createPhysicsObject:(CC3Node *)node shape:(btCollisionShape *)shape mass:(float)mass restitution:(float)restitution;
 
-- (void) udpateGlobalTransformation:(CC3GLMatrix *)parentTransformation;
-
 @end
