@@ -28,11 +28,11 @@ extern "C" {
 
 #import "CC3PhysicsWorld.h"
 #import "CC3PhysicsObject3D.h"
-#import "CC3MotionState.h"
 #import "cocos2d.h"
 
 
 @implementation CC3PhysicsWorld
+@synthesize _discreteDynamicsWorld;
 
 - (id) init {
     if ((self = [super init])) 
@@ -46,7 +46,6 @@ extern "C" {
 		solver = new btSequentialImpulseConstraintSolver();
 		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 		[self setDiscreteDynamicsWorld:dynamicsWorld];
-        [[CCScheduler sharedScheduler] scheduleSelector:@selector(updateGlobalTransformation) forTarget:self interval:0 paused:NO];
     }
 	
     return self;
@@ -102,8 +101,7 @@ extern "C" {
 	[_physicsObjects removeAllObjects];
 }
 
-- (void) udpateGlobalTransformation 
-{
+- (void) synchTransformation {
 	// Get time since last step
 	NSDate * currentTime = [[NSDate alloc] init];
 	
@@ -119,23 +117,23 @@ extern "C" {
 	[_lastStepTime release];
 	_lastStepTime = currentTime;
 
-	//NSLog(@"N objects = %i", [_physicsObjects count]);
-
 	// Update all global matrices
 	for (CC3PhysicsObject3D *object in _physicsObjects) {
         btTransform gTrans;
         object.rigidBody->getMotionState()->getWorldTransform(gTrans);
-        object.node.location = CC3VectorMake(gTrans.getOrigin().getX(), gTrans.getOrigin().getY(), gTrans.getOrigin().getZ());
+        btVector3 gPos = gTrans.getOrigin();
+        object.node.location = CC3VectorMake(gPos.getX(), gPos.getY(), gPos.getZ());
     }
+    
 }
 
 - (void) setGravity:(float)x y:(float)y z:(float)z {
 	_discreteDynamicsWorld->setGravity(btVector3(x, y, z));
 }
 
-- (CC3PhysicsObject3D *) createPhysicsObject:(CC3Node *)node shape:(btCollisionShape *)shape mass:(float)mass restitution:(float)restitution {
+- (CC3PhysicsObject3D *) createPhysicsObject:(CC3Node *)node shape:(btCollisionShape *)shape mass:(float)mass restitution:(float)restitution position:(CC3Vector)position {
 	// Create a motion state for the object
-	CC3MotionState * motionState = new CC3MotionState(node);
+	btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(position.x, position.y, position.z)));
 	
 	// Create a rigid body
 	btVector3 localInertia(0, 0, 0);
@@ -151,4 +149,3 @@ extern "C" {
 }
 
 @end
-

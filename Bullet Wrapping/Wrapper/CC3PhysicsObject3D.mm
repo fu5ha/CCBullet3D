@@ -27,6 +27,7 @@ extern "C" {
 };
 
 #import "CC3PhysicsObject3D.h"
+#import "CC3PhysicsWorld.h"
 #import "CC3Node.h"
 
 #import "btBulletDynamicsCommon.h"
@@ -35,11 +36,13 @@ extern "C" {
 
 @synthesize node = _node;
 @synthesize rigidBody = _rigidBody;
+@synthesize shape = _shape;
 
 - (id) initWithNode:(CC3Node *)node andRigidBody:(btRigidBody *)rigidBody {
     if ((self = [super init])) {
     	_node = [node retain];
     	_rigidBody = rigidBody;
+        _shape = _rigidBody->getCollisionShape();
     	
     }
 	
@@ -50,9 +53,9 @@ extern "C" {
 	[_node release];
 	
 	delete _rigidBody->getMotionState();
-	delete _rigidBody->getCollisionShape();
+	delete _shape;
 	delete _rigidBody;
-
+    delete p2p;
 	[super dealloc];
 }
 
@@ -70,12 +73,14 @@ extern "C" {
 	_rigidBody->applyImpulse(bodyForce, bodyPosition);
 }
 
-/*- (void) setGlobalLocation:(CC3Vector)position {
-    btTransform nTrans;
-    _rigidBody->getMotionState()->getWorldTransform(nTrans);
-    btTransform rTrans;
-    rTrans = btTransform(nTrans.getRotation(), btVector3(position.x, position.y, position.z));
-    _rigidBody->getMotionState()->setWorldTransform(rTrans);
+- (void) setObjectLocation:(CC3Vector)position world:(CC3PhysicsWorld *)world {
+    btVector3 btPosition = btVector3(position.x, position.y, position.z);
+    p2p = new btPoint2PointConstraint(*_rigidBody, btVector3(_node.location.x, _node.location.y, _node.location.z));
+    world._discreteDynamicsWorld->addConstraint(p2p);
+    p2p->m_setting.m_impulseClamp = 30;
+    //very weak constraint for picking
+    p2p->m_setting.m_tau = 0.001f;
+    p2p->setPivotB(btPosition);
 }
 
 - (void) setRotationQuaternion:(CC3Vector4)quaternion{
@@ -84,6 +89,6 @@ extern "C" {
     btTransform rTrans;
     rTrans = btTransform(btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w), nTrans.getOrigin());
     _rigidBody->getMotionState()->setWorldTransform(rTrans);
-}*/
+}
 
 @end

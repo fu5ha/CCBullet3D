@@ -26,6 +26,8 @@
 
 
 #import <Foundation/Foundation.h>
+#import "btBulletDynamicsCommon.h"
+#import "CC3PhysicsWorld.h"
 
 @class CC3Node;
 class btRigidBody;
@@ -43,6 +45,8 @@ class btRigidBody;
 @private
 	CC3Node * _node;
 	btRigidBody * _rigidBody;
+    btCollisionShape *_shape;
+    btPoint2PointConstraint *p2p;
 
 }
 
@@ -55,6 +59,11 @@ class btRigidBody;
  * Returns the associated btRigidBody.
  */
 @property (readonly) btRigidBody * rigidBody;
+
+/**
+ * Returns the associated btCollisionShape
+ */
+@property (readonly) btCollisionShape * shape;
 
 /**
  * Initialises the CC3PhysicsObject3D with an CC3Node and a btRigidBody.
@@ -76,15 +85,5 @@ class btRigidBody;
  * @param position The position at which the force is applied.
  */
 - (void) applyImpulse:(CC3Vector)force withPosition:(CC3Vector)position;
-
-/**
- *Sets the global position, defined as a CC3Vector, of the CC3PhysicsObject
- */
-//- (void) setGlobalPosition:(CC3Vector)position;
-
-/**
- *sets the rotation, defined as a quaternion (CC3Vector4) of the CC3PhysicsObject
- */
-//- (void) setRotationQuaternion:(CC3Vector4)quaternion;
 
 @end

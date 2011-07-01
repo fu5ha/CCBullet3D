@@ -24,6 +24,7 @@
  */
 
 #import "CC3Node.h"
+#import <Foundation/Foundation.h>
 #import "btBulletDynamicsCommon.h"
 
 @class CC3PhysicsObject3D;
@@ -52,6 +53,8 @@ class btCollisionShape;
 
 }
 
+@property (readonly) btDiscreteDynamicsWorld * _discreteDynamicsWorld;
+
 /**
  * Initialises the CC3PhysicsWorld;
  */
@@ -64,9 +67,10 @@ class btCollisionShape;
 - (void) setDiscreteDynamicsWorld:(btDiscreteDynamicsWorld *)discreteDynamicsWorld;
 
 /**
- *steps physics simulation and updates meshes to match normally you won't need to call this.
+ *steps physics simulation and updates meshes to match the physics simulation. YOU NEED TO CALL THIS IN AN
+ *UPDATE METHOD!
  */
-- (void) updateGlobalTransformation;
+-(void) synchTransformation;
 
 /**
  * Adds a new CC3PhysicsObject3D containing both a btRigidBody and an CC3Node. Note, this DOES NOT add the
@@ -100,7 +104,6 @@ class btCollisionShape;
  * @param restitution The restitution of the object.
  * @return (autorelease) The created CC3PhysicsObject3D containing the btRigidBody and the CC3Node.
  */
-- (CC3PhysicsObject3D *) createPhysicsObject:(CC3Node *)node shape:(btCollisionShape *)shape mass:(float)mass restitution:(float)restitution;
+- (CC3PhysicsObject3D *) createPhysicsObject:(CC3Node *)node shape:(btCollisionShape *)shape mass:(float)mass restitution:(float)restitution position:(CC3Vector)position;
 
 @end
-
