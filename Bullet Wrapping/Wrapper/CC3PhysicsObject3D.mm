@@ -70,7 +70,7 @@ extern "C" {
 	_rigidBody->applyImpulse(bodyForce, bodyPosition);
 }
 
-- (void) setGlobalLocation:(CC3Vector)position {
+/*- (void) setGlobalLocation:(CC3Vector)position {
     btTransform nTrans;
     _rigidBody->getMotionState()->getWorldTransform(nTrans);
     btTransform rTrans;
@@ -84,6 +84,6 @@ extern "C" {
     btTransform rTrans;
     rTrans = btTransform(btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w), nTrans.getOrigin());
     _rigidBody->getMotionState()->setWorldTransform(rTrans);
-}
+}*/
 
 @end
