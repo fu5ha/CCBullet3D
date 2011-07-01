@@ -1,0 +1,77 @@
+10
+
+dir
+2401
+http://bullet.googlecode.com/svn/trunk/src/BulletDynamics
+http://bullet.googlecode.com/svn
+
+
+
+2011-05-20T12:29:24.572654Z
+2397
+erwin.coumans
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+08e121b0-ae19-0410-a57b-3be3395fd4fd
+
+ConstraintSolver
+dir
+
+Vehicle
+dir
+
+Dynamics
+dir
+
+ibmsdk
+dir
+
+Character
+dir
+
+CMakeLists.txt
+file
+
+
+
+
+2011-06-29T04:47:49.000000Z
+47f1e272fd6ba88ca529b32e88a8d914
+2010-09-21T23:14:10.915802Z
+2210
+erwin.coumans
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4099
+
