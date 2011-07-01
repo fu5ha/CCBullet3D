@@ -23,8 +23,15 @@
  *
  */
 
+extern "C" {
+#import "CC3Foundation.h"
+}
+
 #import "CC3MotionState.h"
 #import "CC3Node.h"
+#import "CC3GLMatrix.h"
+#import "btVector3.h"
+#import "btQuaternion.h"
 
 CC3MotionState::CC3MotionState(CC3Node * node) :
 	_node(node) {
@@ -35,12 +42,20 @@ CC3MotionState::~CC3MotionState() {
 
 void CC3MotionState::getWorldTransform(btTransform& centerOfMassWorldTrans) const {
 	float transformation[16];
-	[_node getTransformationAsOpenGLMatrix:transformation]; //Make appropriate method
+	CC3GLMatrix *nodeTransform = [[CC3GLMatrix alloc] init];
+    [nodeTransform populateFromTranslation:_node.location];
+    [nodeTransform rotateByQuaternion:_node.quaternion];
 	centerOfMassWorldTrans.setFromOpenGLMatrix(transformation);
 }
 
 void CC3MotionState::setWorldTransform(const btTransform& centerOfMassWorldTrans) {
-	float transformation[16];
-	centerOfMassWorldTrans.getOpenGLMatrix(transformation);
-	[_node setTransformationFromOpenGLMatrix:transformation]; //Make appropriate method
+    btVector3 rPoint;
+    btQuaternion rRot;
+	rPoint = btVector3(centerOfMassWorldTrans.getOrigin());
+    rRot = btQuaternion(centerOfMassWorldTrans.getRotation());
+    btVector3 rRotAxisBt = rRot.getAxis();
+    CC3Vector rRotAxisCC3 = CC3VectorMake(rRotAxisBt.getX(), rRotAxisBt.getY(), rRotAxisBt.getZ());
+    float rRotAngle = rRot.getAngle();
+    _node.location = CC3VectorMake(rPoint.getX(), rPoint.getY(), rPoint.getZ());
+    _node.quaternion = CC3Vector4Make(rRotAxisCC3.x, rRotAxisCC3.y, rRotAxisCC3.z, rRotAngle);
 }

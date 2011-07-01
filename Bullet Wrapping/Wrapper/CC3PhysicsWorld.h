@@ -24,6 +24,7 @@
  */
 
 #import "CC3Node.h"
+#import "btBulletDynamicsCommon.h"
 
 @class CC3PhysicsObject3D;
 class btRigidBody;
@@ -40,6 +41,11 @@ class btCollisionShape;
 	
 @private
 	btDiscreteDynamicsWorld * _discreteDynamicsWorld;
+    btDiscreteDynamicsWorld * dynamicsWorld;
+    btBroadphaseInterface *broadphase;
+    btDefaultCollisionConfiguration *collisionConfiguration;
+    btSequentialImpulseConstraintSolver *solver;
+    btCollisionDispatcher *dispatcher;
 
 	NSDate * _lastStepTime;
 	NSMutableArray * _physicsObjects;

@@ -22,13 +22,14 @@
  * THE SOFTWARE.
  *
  */
+extern "C" {
+#import "CC3Foundation.h"  
+};
 
 #import "CC3PhysicsWorld.h"
 #import "CC3PhysicsObject3D.h"
 #import "CC3MotionState.h"
-#import "CC3GLU.h"
 
-#import "btBulletDynamicsCommon.h"
 
 @implementation CC3PhysicsWorld
 
@@ -38,6 +39,12 @@
     	
     	_lastStepTime = [[NSDate alloc] init];
        	_physicsObjects = [[NSMutableArray alloc] init];
+        broadphase = new btDbvtBroadphase();
+		collisionConfiguration = new btDefaultCollisionConfiguration();
+		dispatcher = new btCollisionDispatcher(collisionConfiguration);
+		solver = new btSequentialImpulseConstraintSolver();
+		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
+		[self setDiscreteDynamicsWorld:dynamicsWorld];
     }
 	
     return self;
@@ -48,6 +55,11 @@
 	
 	[_lastStepTime release];
 	[_physicsObjects release];
+    delete broadphase;
+    delete dynamicsWorld;
+    delete collisionConfiguration;
+    delete dispatcher;
+    delete solver;
 
 	[super dealloc];
 }
@@ -88,7 +100,7 @@
 	[_physicsObjects removeAllObjects];
 }
 
-- (void) udpateGlobalTransformation:(CC3Matrix4D *)parentTransformation 
+- (void) udpateGlobalTransformation:(CC3GLMatrix *)parentTransformation 
 {
 	// Get time since last step
 	NSDate * currentTime = [[NSDate alloc] init];
@@ -108,7 +120,11 @@
 	//NSLog(@"N objects = %i", [_physicsObjects count]);
 
 	// Update all global matrices
-	[super udpateGlobalTransformation:parentTransformation]; /* Change to appropriate method */
+	for (CC3PhysicsObject3D *object in _physicsObjects) {
+        btTransform gTrans;
+        object.rigidBody->getMotionState()->getWorldTransform(gTrans);
+        object.node.location = CC3VectorMake(gTrans.getOrigin().getX(), gTrans.getOrigin().getY(), gTrans.getOrigin().getZ());
+    }
 }
 
 - (void) setGravity:(float)x y:(float)y z:(float)z {
@@ -129,8 +145,7 @@
 	// Create a physics object and add it to the physics world
 	CC3PhysicsObject3D * physicsObject = [[CC3PhysicsObject3D alloc] initWithNode:node andRigidBody:rigidBody];
 	[self addPhysicsObject:physicsObject];
-	
-	return [physicsObject autorelease];
+	return physicsObject;
 }
 
 @end
