@@ -4,6 +4,8 @@ STILL IN BETA!!!
 
 create an instance of CC3PhysicsWorld (contains a btDiscreteDynamicsWorld)
 CC3PhysicsWorld *_physicsWorld = [[CC3PhysicsWorld alloc] init];
+and set it's gravity
+[_physicsWorld setGravity:0 y:-9.8 z:0];
 
 create a physics object
 //for a box that is 1 x 1 x 1
