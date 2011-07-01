@@ -9,15 +9,17 @@ CC3PhysicsWorld *_physicsWorld = [[CC3PhysicsWorld alloc] init];
 and set it's gravity
 [_physicsWorld setGravity:0 y:-9.8 z:0];
 
-create a physics object
+create a physics object (it will be at the location of the node it's attached to)
 //for a box that is 1 x 1 x 1
 CC3MeshNode *boxNode;
 btCollisionShape *boxCollisionShape = btBoxCollisionShape(btVector3(1,1,1));//I might provide a wrapper sometime in the future.
 CC3PhysicsObject3D *boxObject = [_physicsWorld createPhysicsObject:node shape:boxCollisionShape mass:1 restitution:0.3];
 
-set the location of a physics object (working on a wrapper, It's not working for some reason :/)
-//set position to 0,5,0 without changing rotation
-btTransform nTrans;
-boxObject.rigidBody->getMotionState()->getWorldTransform(nTrans);
-btTransform trans = btTransform(nTrans.getRotation(), btVector3(0,5,0));
-boxObject.rigidBody->getMotionState()->setWorldTransform(trans);
+set the location of a physics object (you need to delete the object then re-make it)
+
+apply force/impulse
+[boxObject applyForce:cc3v(0,1,0) position:boxObject.node.position];
+[boxObject applyImpulse:cc3v(0,1,0) position:boxObject.node.position];
+
+you need to call this in an update method:
+[_physicsWorld synchTransformation];
