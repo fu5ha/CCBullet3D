@@ -23,10 +23,11 @@
  *
  */
 
+
+
 #import <Foundation/Foundation.h>
 
 @class CC3Node;
-@class CC3Vector3D;
 class btRigidBody;
 
 /**
@@ -67,6 +68,23 @@ class btRigidBody;
  * @param force The force to be applied.
  * @param position The position at which the force is applied.
  */
-- (void) applyForce:(CC3Vector3D *)force withPosition:(CC3Vector3D *)position;
+- (void) applyForce:(CC3Vector)force withPosition:(CC3Vector)position;
+
+/**
+ * Applies an impulse, defined as a vector, to the btRigidBody at a given vector position.
+ * @param force The force to be applied.
+ * @param position The position at which the force is applied.
+ */
+- (void) applyImpulse:(CC3Vector)force withPosition:(CC3Vector)position;
+
+/**
+ *Sets the global position, defined as a CC3Vector, of the CC3PhysicsObject
+ */
+- (void) setGlobalPosition:(CC3Vector)position;
+
+/**
+ *sets the rotation, defined as a quaternion (CC3Vector4) of the CC3PhysicsObject
+ */
+- (void) setRotationQuaternion:(CC3Vector4)quaternion;
 
 @end

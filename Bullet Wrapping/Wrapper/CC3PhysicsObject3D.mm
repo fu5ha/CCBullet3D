@@ -22,10 +22,12 @@
  * THE SOFTWARE.
  *
  */
+extern "C" {
+#import "CC3Foundation.h"
+};
 
 #import "CC3PhysicsObject3D.h"
 #import "CC3Node.h"
-#import "CC3Vector3D.h"
 
 #import "btBulletDynamicsCommon.h"
 
@@ -54,11 +56,34 @@
 	[super dealloc];
 }
 
-- (void) applyForce:(CC3Vector3D *)force withPosition:(CC3Vector3D *)position {
+- (void) applyForce:(CC3Vector)force withPosition:(CC3Vector)position {
 	btVector3 bodyForce(force.x, force.y, force.z);
 	btVector3 bodyPosition(position.x, position.y, position.z);
 
 	_rigidBody->applyForce(bodyForce, bodyPosition);	
+}
+
+-(void) applyImpulse:(CC3Vector)force withPosition:(CC3Vector)position {
+    btVector3 bodyForce(force.x, force.y, force.z);
+	btVector3 bodyPosition(position.x, position.y, position.z);
+    
+	_rigidBody->applyImpulse(bodyForce, bodyPosition);
+}
+
+- (void) setGlobalLocation:(CC3Vector)position {
+    btTransform nTrans;
+    _rigidBody->getMotionState()->getWorldTransform(nTrans);
+    btTransform rTrans;
+    rTrans = btTransform(nTrans.getRotation(), btVector3(position.x, position.y, position.z));
+    _rigidBody->getMotionState()->setWorldTransform(rTrans);
+}
+
+- (void) setRotationQuaternion:(CC3Vector4)quaternion{
+    btTransform nTrans;
+    _rigidBody->getMotionState()->getWorldTransform(nTrans);
+    btTransform rTrans;
+    rTrans = btTransform(btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w), nTrans.getOrigin());
+    _rigidBody->getMotionState()->setWorldTransform(rTrans);
 }
 
 @end
