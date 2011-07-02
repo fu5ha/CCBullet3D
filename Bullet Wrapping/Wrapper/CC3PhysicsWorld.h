@@ -50,6 +50,7 @@ class btCollisionShape;
     
 	NSDate * _lastStepTime;
 	NSMutableArray * _physicsObjects;
+    NSMutableArray * _collidingObjects;
     CC3PhysicsObject3D *_collisionObject1;
     CC3PhysicsObject3D *_collisionObject2;
     
@@ -110,6 +111,6 @@ class btCollisionShape;
  */
 - (CC3PhysicsObject3D *) createPhysicsObject:(CC3Node *)node shape:(btCollisionShape *)shape mass:(float)mass restitution:(float)restitution position:(CC3Vector)position;
 
-- (void) onCollision:(CC3PhysicsObject3D *)object1 body2:(CC3PhysicsObject3D *)object2 point1:(CC3Vector)point1 point2:(CC3Vector)point2;
+- (NSMutableArray *) getCollidingObjects;
 
 @end

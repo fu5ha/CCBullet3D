@@ -38,6 +38,8 @@ extern "C" {
 @synthesize rigidBody = _rigidBody;
 @synthesize shape = _shape;
 @synthesize isStatic;
+@synthesize colliding;
+@synthesize collidingWith;
 
 - (id) initWithNode:(CC3Node *)node andRigidBody:(btRigidBody *)rigidBody isStatic:(BOOL)isstatic {
     if ((self = [super init])) {
@@ -45,6 +47,8 @@ extern "C" {
     	_rigidBody = rigidBody;
         _shape = _rigidBody->getCollisionShape();
         isStatic = isstatic;
+        colliding = NO;
+        collidingWith = nil;
     	
     }
 	

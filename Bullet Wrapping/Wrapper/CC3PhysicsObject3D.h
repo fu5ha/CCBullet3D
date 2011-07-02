@@ -48,6 +48,8 @@ class btRigidBody;
     btCollisionShape *_shape;
     btPoint2PointConstraint *p2p;
     BOOL isStatic;
+    BOOL colliding;
+    CC3PhysicsObject3D * collidingWith;
 
 }
 
@@ -69,6 +71,10 @@ class btRigidBody;
  * Returns YES if an object is static
  */
 @property (readonly) BOOL isStatic;
+
+@property (nonatomic, assign) BOOL colliding;
+
+@property (nonatomic, assign) CC3PhysicsObject3D * collidingWith;
 
 /**
  * Initialises the CC3PhysicsObject3D with an CC3Node and a btRigidBody.

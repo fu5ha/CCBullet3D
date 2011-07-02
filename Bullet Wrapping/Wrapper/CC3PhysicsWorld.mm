@@ -46,6 +46,7 @@ extern "C" {
 		solver = new btSequentialImpulseConstraintSolver();
 		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 		[self setDiscreteDynamicsWorld:dynamicsWorld];
+        _collidingObjects = [[NSMutableArray alloc] init];
     }
 	
     return self;
@@ -56,6 +57,7 @@ extern "C" {
 	
 	[_lastStepTime release];
 	[_physicsObjects release];
+    [_collidingObjects release];
     delete broadphase;
     delete dynamicsWorld;
     delete collisionConfiguration;
@@ -141,6 +143,7 @@ extern "C" {
     int numManifolds = _discreteDynamicsWorld->getDispatcher()->getNumManifolds();
 	for (int i=0;i<numManifolds;i++)
 	{
+        NSMutableArray *_thisCollidingObjects = [[[NSMutableArray alloc] init] autorelease];
         btVector3 ptA;
         btVector3 ptB;
         int objectNum = 0;
@@ -166,11 +169,26 @@ extern "C" {
                 } else {
                     _collisionObject2 = object;
                 }
+                if (object.colliding) {
+                    [_thisCollidingObjects addObject:object];
+                } else {
+                    [_collidingObjects addObject:object];
+                    [_thisCollidingObjects addObject:object];
+                    object.colliding = YES;
+                }
+            }
+        }
+        _collisionObject1.collidingWith = _collisionObject2;
+        _collisionObject2.collidingWith = _collisionObject1;
+        for (CC3PhysicsObject3D *object in _collidingObjects) {
+            if (![_thisCollidingObjects containsObject:object]) {
+                [_collidingObjects removeObject:object];
+                object.colliding = NO;
+                object.collidingWith = nil;
             }
         }
         CC3Vector cptA = cc3v(ptA.getX(), ptA.getY(), ptA.getZ());
         CC3Vector cptB = cc3v(ptB.getX(), ptB.getY(), ptB.getZ());
-        [self onCollision:_collisionObject1 body2:_collisionObject2 point1:cptA point2:cptB];
 	}
 }
 
@@ -178,9 +196,9 @@ extern "C" {
 	_discreteDynamicsWorld->setGravity(btVector3(x, y, z));
 }
 
-- (void) onCollision:(CC3PhysicsObject3D *)object1 body2:(CC3PhysicsObject3D *)object2 point1:(CC3Vector)point1 point2:(CC3Vector)point2
+- (NSMutableArray *) getCollidingObjects
 {
-    
+    return _collidingObjects;
 }
 
 - (CC3PhysicsObject3D *) createPhysicsObject:(CC3Node *)node shape:(btCollisionShape *)shape mass:(float)mass restitution:(float)restitution position:(CC3Vector)position {
