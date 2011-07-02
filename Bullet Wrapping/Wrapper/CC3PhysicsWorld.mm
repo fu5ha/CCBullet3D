@@ -138,11 +138,49 @@ extern "C" {
         object.node.location = CC3VectorMake(gPos.getX(), gPos.getY(), gPos.getZ());
         object.node.quaternion = quaternion;
     }
-    
+    int numManifolds = _discreteDynamicsWorld->getDispatcher()->getNumManifolds();
+	for (int i=0;i<numManifolds;i++)
+	{
+        btVector3 ptA;
+        btVector3 ptB;
+        int objectNum = 0;
+		btPersistentManifold* contactManifold =  _discreteDynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+		btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
+		btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
+        
+		int numContacts = contactManifold->getNumContacts();
+		for (int j=0;j<numContacts;j++)
+		{
+			btManifoldPoint& pt = contactManifold->getContactPoint(j);
+			if (pt.getDistance()<0.f)
+			{
+				ptA = pt.getPositionWorldOnA();
+				ptB = pt.getPositionWorldOnB();
+			}
+		}
+        for (CC3PhysicsObject3D *object in _physicsObjects) {
+            if (object.rigidBody == obA or object.rigidBody == obB) {
+                if (objectNum == 1) {
+                    _collisionObject1 = object;
+                    objectNum ++;
+                } else {
+                    _collisionObject2 = object;
+                }
+            }
+        }
+        CC3Vector cptA = cc3v(ptA.getX(), ptA.getY(), ptA.getZ());
+        CC3Vector cptB = cc3v(ptB.getX(), ptB.getY(), ptB.getZ());
+        [self onCollision:_collisionObject1 body2:_collisionObject2 point1:cptA point2:cptB];
+	}
 }
 
 - (void) setGravity:(float)x y:(float)y z:(float)z {
 	_discreteDynamicsWorld->setGravity(btVector3(x, y, z));
+}
+
+- (void) onCollision:(CC3PhysicsObject3D *)object1 body2:(CC3PhysicsObject3D *)object2 point1:(CC3Vector)point1 point2:(CC3Vector)point2
+{
+    
 }
 
 - (CC3PhysicsObject3D *) createPhysicsObject:(CC3Node *)node shape:(btCollisionShape *)shape mass:(float)mass restitution:(float)restitution position:(CC3Vector)position {
