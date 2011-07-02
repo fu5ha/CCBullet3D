@@ -47,6 +47,7 @@ class btRigidBody;
 	btRigidBody * _rigidBody;
     btCollisionShape *_shape;
     btPoint2PointConstraint *p2p;
+    BOOL isStatic;
 
 }
 
@@ -64,13 +65,17 @@ class btRigidBody;
  * Returns the associated btCollisionShape
  */
 @property (readonly) btCollisionShape * shape;
+/**
+ * Returns YES if an object is static
+ */
+@property (readonly) BOOL isStatic;
 
 /**
  * Initialises the CC3PhysicsObject3D with an CC3Node and a btRigidBody.
  * @param node The CC3Node.
  * @param rigidBody The btRigidBody.
  */
-- (id) initWithNode:(CC3Node *)node andRigidBody:(btRigidBody *)rigidBody;
+- (id) initWithNode:(CC3Node *)node andRigidBody:(btRigidBody *)rigidBody isStatic:(BOOL)isstatic;
 
 /**
  * Applies a force, defined as a vector, to the btRigidBody at a given vector position.

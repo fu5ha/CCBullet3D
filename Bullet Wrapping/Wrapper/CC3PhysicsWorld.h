@@ -50,6 +50,8 @@ class btCollisionShape;
 
 	NSDate * _lastStepTime;
 	NSMutableArray * _physicsObjects;
+    
+    BOOL isstatic;
 
 }
 

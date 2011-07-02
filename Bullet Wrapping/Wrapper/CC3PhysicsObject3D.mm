@@ -37,12 +37,14 @@ extern "C" {
 @synthesize node = _node;
 @synthesize rigidBody = _rigidBody;
 @synthesize shape = _shape;
+@synthesize isStatic;
 
-- (id) initWithNode:(CC3Node *)node andRigidBody:(btRigidBody *)rigidBody {
+- (id) initWithNode:(CC3Node *)node andRigidBody:(btRigidBody *)rigidBody isStatic:(BOOL)isstatic {
     if ((self = [super init])) {
     	_node = [node retain];
     	_rigidBody = rigidBody;
         _shape = _rigidBody->getCollisionShape();
+        isStatic = isstatic;
     	
     }
 	

@@ -75,9 +75,11 @@ extern "C" {
 	_discreteDynamicsWorld->addRigidBody(physicsObject.rigidBody);
 	
 	// Add to physics list
-	[_physicsObjects addObject:physicsObject];
+    if (!physicsObject.isStatic) {
+        [_physicsObjects addObject:physicsObject];
+    }
+	
 }
-
 - (void) removePhysicsObject:(CC3PhysicsObject3D *)physicsObject 
 {
 	// Remove from render list
@@ -122,7 +124,19 @@ extern "C" {
         btTransform gTrans;
         object.rigidBody->getMotionState()->getWorldTransform(gTrans);
         btVector3 gPos = gTrans.getOrigin();
+        btVector3 axis = gTrans.getRotation().getAxis();
+        float angle = gTrans.getRotation().getAngle();
+        CC3Vector4 quaternion;
+        float sinAngle;
+        angle *= 0.5f;
+        axis = axis.normalized();
+        sinAngle = sin(angle);
+        quaternion.x = (axis.getX() * sinAngle);
+        quaternion.y = (axis.getY() * sinAngle);
+        quaternion.z = (axis.getZ() * sinAngle);
+        quaternion.w = cos(angle);
         object.node.location = CC3VectorMake(gPos.getX(), gPos.getY(), gPos.getZ());
+        object.node.quaternion = quaternion;
     }
     
 }
@@ -143,8 +157,13 @@ extern "C" {
 	rigidBody->setActivationState(DISABLE_DEACTIVATION);
 
 	// Create a physics object and add it to the physics world
-	CC3PhysicsObject3D * physicsObject = [[CC3PhysicsObject3D alloc] initWithNode:node andRigidBody:rigidBody];
-	[self addPhysicsObject:physicsObject];
+    if (mass > 0) {
+        isstatic = NO;
+    } else {
+        isstatic = YES;
+	}
+    CC3PhysicsObject3D *physicsObject = [[CC3PhysicsObject3D alloc] initWithNode:node andRigidBody:rigidBody isStatic:isstatic];
+    [self addPhysicsObject:physicsObject];
 	return physicsObject;
 }
 
