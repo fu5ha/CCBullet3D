@@ -9,11 +9,11 @@ CC3PhysicsWorld *_physicsWorld = [[CC3PhysicsWorld alloc] init];
 and set it's gravity
 [_physicsWorld setGravity:0 y:-9.8 z:0];
 
-create a physics object (it will be at the location of the node it's attached to)
+create a physics object
 //for a box that is 1 x 1 x 1
 CC3MeshNode *boxNode;
 btCollisionShape *boxCollisionShape = btBoxCollisionShape(btVector3(1,1,1));//I might provide a wrapper sometime in the future.
-CC3PhysicsObject3D *boxObject = [_physicsWorld createPhysicsObject:node shape:boxCollisionShape mass:1 restitution:0.3];
+CC3PhysicsObject3D *boxObject = [_physicsWorld createPhysicsObject:node shape:boxCollisionShape mass:1 restitution:0.3 position:boxNode.location];
 
 set the location of a physics object (you need to delete the object then re-make it)
 
