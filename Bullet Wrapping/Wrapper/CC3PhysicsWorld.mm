@@ -141,13 +141,13 @@ extern "C" {
         object.node.quaternion = quaternion;
     }
     int numManifolds = _discreteDynamicsWorld->getDispatcher()->getNumManifolds();
-	for (int i=0;i<numManifolds;i++)
+	NSMutableArray *_thisCollidingObjects = [[[NSMutableArray alloc] init] autorelease];
+    for (int i=0;i<numManifolds;i++)
 	{
-        NSMutableArray *_thisCollidingObjects = [[[NSMutableArray alloc] init] autorelease];
 		btPersistentManifold* contactManifold =  _discreteDynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
-		btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
-		btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
-        for (CC3PhysicsObject3D *object in _physicsObjects) {
+		btRigidBody* obA = static_cast<btRigidBody*>(contactManifold->getBody0());
+		btRigidBody* obB = static_cast<btRigidBody*>(contactManifold->getBody1());
+        for (CC3PhysicsObject3D * object in _physicsObjects) {
             if (object.rigidBody == obA) {
                 _collisionObject1 = object;
                 if (object.colliding) {
