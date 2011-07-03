@@ -41,6 +41,7 @@ extern "C" {
 @synthesize colliding;
 @synthesize collidingWith;
 @synthesize collisionPhase;
+@synthesize collidingCount;
 
 - (id) initWithNode:(CC3Node *)node andRigidBody:(btRigidBody *)rigidBody isStatic:(BOOL)isstatic {
     if ((self = [super init])) {

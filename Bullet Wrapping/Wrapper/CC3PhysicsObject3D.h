@@ -49,8 +49,9 @@ class btRigidBody;
     btPoint2PointConstraint *p2p;
     BOOL isStatic;
     BOOL colliding;
+    int collidingCount;
     NSString *collisionPhase;
-    CC3PhysicsObject3D * collidingWith;
+    btRigidBody * collidingWith;
 
 }
 
@@ -75,9 +76,11 @@ class btRigidBody;
 
 @property (nonatomic, assign) BOOL colliding;
 
-@property (nonatomic, assign) CC3PhysicsObject3D * collidingWith;
+@property (nonatomic, assign) btRigidBody * collidingWith;
 
 @property (nonatomic, assign) NSString * collisionPhase;
+
+@property (nonatomic, assign) int collidingCount;
 
 /**
  * Initialises the CC3PhysicsObject3D with an CC3Node and a btRigidBody.
