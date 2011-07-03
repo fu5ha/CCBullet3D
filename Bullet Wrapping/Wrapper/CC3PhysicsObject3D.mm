@@ -40,6 +40,7 @@ extern "C" {
 @synthesize isStatic;
 @synthesize colliding;
 @synthesize collidingWith;
+@synthesize collisionPhase;
 
 - (id) initWithNode:(CC3Node *)node andRigidBody:(btRigidBody *)rigidBody isStatic:(BOOL)isstatic {
     if ((self = [super init])) {
@@ -49,7 +50,7 @@ extern "C" {
         isStatic = isstatic;
         colliding = NO;
         collidingWith = nil;
-    	
+    	collisionPhase = nil;
     }
 	
     return self;

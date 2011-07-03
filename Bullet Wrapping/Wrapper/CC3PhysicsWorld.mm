@@ -144,51 +144,57 @@ extern "C" {
 	for (int i=0;i<numManifolds;i++)
 	{
         NSMutableArray *_thisCollidingObjects = [[[NSMutableArray alloc] init] autorelease];
-        btVector3 ptA;
-        btVector3 ptB;
-        int objectNum = 0;
 		btPersistentManifold* contactManifold =  _discreteDynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
 		btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
 		btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
-        
-		int numContacts = contactManifold->getNumContacts();
-		for (int j=0;j<numContacts;j++)
-		{
-			btManifoldPoint& pt = contactManifold->getContactPoint(j);
-			if (pt.getDistance()<0.f)
-			{
-				ptA = pt.getPositionWorldOnA();
-				ptB = pt.getPositionWorldOnB();
-			}
-		}
         for (CC3PhysicsObject3D *object in _physicsObjects) {
-            if (object.rigidBody == obA or object.rigidBody == obB) {
-                if (objectNum == 1) {
-                    _collisionObject1 = object;
-                    objectNum ++;
-                } else {
-                    _collisionObject2 = object;
-                }
+            if (object.rigidBody == obA) {
+                _collisionObject1 = object;
                 if (object.colliding) {
                     [_thisCollidingObjects addObject:object];
+                    object.collisionPhase = @"colliding";
                 } else {
                     [_collidingObjects addObject:object];
                     [_thisCollidingObjects addObject:object];
+                    object.collisionPhase = @"began";
                     object.colliding = YES;
+                }
+            } else {
+                if (object.collisionPhase == @"ended") {
+                    object.collisionPhase = nil;
+                }
+            }
+            if (object.rigidBody == obB) {
+                _collisionObject2 = object;
+                if (object.colliding) {
+                    [_thisCollidingObjects addObject:object];
+                    object.collisionPhase = @"colliding";
+                } else {
+                    [_collidingObjects addObject:object];
+                    [_thisCollidingObjects addObject:object];
+                    object.collisionPhase = @"began";
+                    object.colliding = YES;
+                }
+            } else {
+                if (object.collisionPhase == @"ended") {
+                    object.collisionPhase = nil;
                 }
             }
         }
         _collisionObject1.collidingWith = _collisionObject2;
         _collisionObject2.collidingWith = _collisionObject1;
+        NSMutableArray *objectsToDelete = [[[NSMutableArray alloc] init] autorelease];
         for (CC3PhysicsObject3D *object in _collidingObjects) {
             if (![_thisCollidingObjects containsObject:object]) {
-                [_collidingObjects removeObject:object];
+                [objectsToDelete addObject:object];
                 object.colliding = NO;
                 object.collidingWith = nil;
+                object.collisionPhase = @"ended";
             }
         }
-        CC3Vector cptA = cc3v(ptA.getX(), ptA.getY(), ptA.getZ());
-        CC3Vector cptB = cc3v(ptB.getX(), ptB.getY(), ptB.getZ());
+        for (CC3PhysicsObject3D *object in objectsToDelete) {
+            [_collidingObjects removeObject:object];
+        }
 	}
 }
 
