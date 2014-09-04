@@ -2,7 +2,7 @@ Bullet Cocos3D Wrapper
 
 STILL IN BETA!!!
 IMPORTANT!!
-You need to edit your build settings and add a NOT recursive header search path "./Bullet\ Wrapping/src/" WITH the quotes to the "Header Search Paths" and "User Header Search Paths". If you don't, you'll get like over 1000 errors.
+You need to edit your build settings and add a NOT recursive header search path "./Bullet\ Wrapping/src/" WITH the quotes to the "Header Search Paths" and "User Header Search Paths".
 
 create an instance of CC3PhysicsWorld (contains a btDiscreteDynamicsWorld)
 CC3PhysicsWorld *_physicsWorld = [[CC3PhysicsWorld alloc] init];
@@ -15,11 +15,11 @@ CC3MeshNode *boxNode;
 btCollisionShape *boxCollisionShape = btBoxCollisionShape(btVector3(1,1,1));//I might provide a wrapper sometime in the future.
 CC3PhysicsObject3D *boxObject = [_physicsWorld createPhysicsObject:node shape:boxCollisionShape mass:1 restitution:0.3 position:boxNode.location];
 
-set the location of a physics object (you need to delete the object then re-make it)
-
 apply force/impulse
 [boxObject applyForce:cc3v(0,1,0) position:boxObject.node.position];
 [boxObject applyImpulse:cc3v(0,1,0) position:boxObject.node.position];
 
 you need to call this in an update method:
 [_physicsWorld synchTransformation];
+
+to set the location of a physics object you need to delete the object then re-make it
