@@ -1,6 +1,5 @@
 Bullet Cocos3D Wrapper
 
-STILL IN BETA!!!
 IMPORTANT!!
 You need to edit your build settings and add a NOT recursive header search path "./Bullet\ Wrapping/src/" WITH the quotes to the "Header Search Paths" and "User Header Search Paths".
 
